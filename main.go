@@ -11,16 +11,16 @@ import (
 	"os/exec"
 )
 
-//go:embed embedded/main
-var embeddedFs embed.FS
+//go:embed plugin/main
+var pluginFs embed.FS
 
-//go:embed main/main
+//go:embed entrypoint/main
 var mainFs embed.FS
 
 func main() {
 	fmt.Println("extracting embedded files")
 
-	f, err := embeddedFs.Open("embedded/main")
+	f, err := pluginFs.Open("plugin/main")
 	if err != nil {
 		panic(err)
 	}
@@ -29,24 +29,24 @@ func main() {
 	if err != nil && !os.IsExist(err) {
 		panic(err)
 	}
-	err = extract(f, "plugins/embedded")
+	err = extract(f, "plugins/plug")
 	if err != nil {
 		panic(err)
 	}
 
-	f, err = mainFs.Open("main/main")
+	f, err = mainFs.Open("entrypoint/main")
 	if err != nil {
 		panic(err)
 	}
 
-	err = extract(f, "combiner")
+	err = extract(f, "main")
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("overwritten combiner, running the new combiner\n")
+	fmt.Println("overwritten main, running the new main\n")
 
-	cmd := exec.Command("./combiner")
+	cmd := exec.Command("./main")
 	cmd.Args = os.Args
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

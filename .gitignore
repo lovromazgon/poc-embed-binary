@@ -1,4 +1,4 @@
-embedded/main
-main/main
-combiner
+plugin/main
+entrypoint/main
+main
 plugins
